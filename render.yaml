@@ -1,0 +1,12 @@
+services:
+  sloth-agent-frontend:
+    type: web
+    env: node
+    buildCommand: "cd frontend && npm install || true"
+    startCommand: "cd frontend && npx serve . --port $PORT"
+    healthcheckPath: /
+    envVars:
+      - key: API_BASE_URL
+        sync: false
+      - key: ENVIRONMENT
+        value: production

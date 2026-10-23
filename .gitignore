@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[c]
+*.pyc
+*.env
+.env
+.venv/
+venv/
+
+# Node
+node_modules/
+dist/
+build/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Misc

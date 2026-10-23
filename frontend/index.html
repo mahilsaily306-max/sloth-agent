@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sloth Agent — Open-Source AI that works while you laze</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: #0f172a; color: #e2e8f0; line-height: 1.5;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+  header { margin-bottom: 32px; border-bottom: 1px solid #334155; padding-bottom: 20px; }
+  h1 { font-size: 2rem; letter-spacing: -0.02em; margin-bottom: 8px; }
+  h1 .emoji { margin-right: 10px; }
+  p.sub { color: #94a3b8; font-size: 1rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 30px; }
+  .card {
+    background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+    padding: 20px; transition: transform .15s, border-color .15s;
+  }
+  .card:hover { border-color: #60a5fa; transform: translateY(-2px); }
+  .card h3 { font-size: 1.05rem; margin-bottom: 10px; color: #60a5fa; display:flex; align-items:center; gap:8px; }
+  .card p { color: #cbd5e1; font-size: 0.9rem; margin-bottom: 14px; }
+  button {
+    background: #3b82f6; color: white; border: none; border-radius: 8px;
+    padding: 10px 16px; font-size: 0.9rem; cursor: pointer;
+    width: 100%; font-weight: 600;
+  }
+  button:hover { background: #2563eb; }
+  button.secondary { background: #475569; }
+  button.secondary:hover { background: #334155; }
+  button.loading { opacity: .6; cursor: wait; }
+  .result { margin-top: 12px; padding: 12px; background: #0f172a; border: 1px solid #334155;
+            border-radius: 8px; font-size: 0.88rem; color: #cbd5e1; white-space: pre-wrap;
+            min-height: 60px; display:none; }
+  .result.show { display: block; }
+  .ok { color: #4ade80; } .err { color: #f87171; } .muted { color: #94a3b8; font-size: 0.82rem; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 600px){ .wrap { padding: 20px 14px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span class="emoji">&#128032;</span>Sloth Agent</h1>
+    <p class="sub">Open-source AI at its core &mdash; runs on your machine, works while you laze.
+    <br><span class="muted">Hacktoberfest Week 3 &mdash; Slow and Steady &bull; Gemma + TabPFN + Temporal + Sentry + Mastra + more</span></p>
+  </header>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h3>&#128220; Overnight Summary</h3>
+      <p>Reads your group chats / inbox overnight and hands you a two-line summary in the morning.</p>
+      <button onclick="run('summarize')">Run Summary</button>
+      <div id="res-summarize" class="result"></div>
+    </div>
+    <div class="card">
+      <h3>&#128197; Tidy Files</h3>
+      <p>Sorts, renames, and archives clutter so you never face a messy folder again.</p>
+      <button onclick="run('tidy')">Run Tidy (dry-run)</button>
+      <div id="res-tidy" class="result"></div>
+    </div>
+    <div class="card">
+      <h3>&#128200; Predict (TabPFN)</h3>
+      <p>Forecast or classify from a CSV using Prior Labs' TabPFN tabular foundation model.</p>
+      <button onclick="run('predict')">Run Prediction</button>
+      <div id="res-predict" class="result"></div>
+    </div>
+    <div class="card">
+      <h3>&#128172; Chat (Gemma)</h3>
+      <p>Talk to Gemma, Google's open-weight model, running entirely locally.</p>
+      <button onclick="run('chat')">Chat with Gemma</button>
+      <div id="res-chat" class="result"></div>
+    </div>
+  </div>
+
+  <div class="card" style="grid-column: 1 / -1;">
+    <h3>&#128712; Full Overnight Run</h3>
+    <p>One click: summarize + tidy + predict. This is the lazy suite &mdash; set it once, run while you sleep.</p>
+    <button style="background:#10b981;" onclick="run('overnight')">Run Overnight Suite</button>
+    <button class="secondary" onclick="run('status')">Check Status</button>
+    <div id="res-overnight" class="result"></div>
+    <div id="res-status" class="result"></div>
+  </div>
+
+  <div class="card" style="grid-column: 1 / -1; margin-top:16px;">
+    <h3>&#127907; Prize Categories Targeted</h3>
+    <p class="muted" style="font-size:0.85rem; margin-bottom:10px;">
+      Featured ($200): Gemma &#183; TabPFN &#183; Render &#183; DigitalOcean &#183; Tinker &#183; Arduino.
+      Partner ($100): Mastra &#183; Sentry &#183; Temporal &#183; MongoDB Atlas &#183; SerpApi &#183; Browserbase &#183; ElevenLabs &#183; Auth0 &#183; Backboard &#183; Entire &#183; GitHub Copilot &#183; .tech Domains &#183; Tiger Data &#183; Ultramarine.
+    </p>
+  </div>
+
+  <div class="card" style="grid-column: 1 / -1; margin-top:16px;">
+    <h3>&#128214; Open Innovation</h3>
+    <p class="muted" style="font-size:0.85rem;">
+      Local only by default: Gemma + TabPFN run on your laptop with no internet after download.
+      Your messages and files stay on your machine. Set up once &mdash; never pay again. Swap models freely.
+      See README.md and DEV_SUBMISSION.md for full partner integrations.
+    </p>
+  </div>
+</div>
+
+<script>
+const API = window.location.origin;
+async function run(kind) {
+  const resEl = document.getElementById('res-' + kind);
+  const btn = document.querySelector(`button[onclick="run('${kind}')"]`);
+  resEl.classList.remove('show'); resEl.textContent = 'Working&hellip;'; resEl.classList.add('show');
+  if (btn) btn.classList.add('loading'); btn.disabled = true;
+  try {
+    let payload, path;
+    if (kind === 'summarize') {
+      path = '/summarize';
+      payload = { messages: [
+        {sender:'Alice', text:'Dinner Thursday?', timestamp:'22:15'},
+        {sender:'Group', text:'Meeting moved to 10am.', timestamp:'23:02'}
+      ], source: 'overnight-inbox'};
+    } else if (kind === 'tidy') {
+      path = '/tidy'; payload = { directory: '.', dry_run: true };
+    } else if (kind === 'predict') {
+      path = '/predict';
+      payload = { csv_path: 'sample.csv', target_column: 'label' };
+    } else if (kind === 'chat') {
+      path = '/chat'; payload = { prompt: 'What should I do tonight?', system: 'You are Sloth Agent.' };
+    } else if (kind === 'overnight') {
+      path = '/overnight';
+      payload = { run_id: 'web-run', directory: '.', messages: [
+        {sender:'Alice', text:'Dinner Thursday?', timestamp:'22:15'},
+        {sender:'Group', text:'Meeting moved to 10am.', timestamp:'23:02'}
+      ]};
+    } else if (kind === 'status') {
+      path = '/runs/web-run';
+    }
+    const resp = await fetch(API + path, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: kind === 'status' ? undefined : JSON.stringify(payload),
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    resEl.textContent = JSON.stringify(data, null, 2);
+    if (data.status === 'error' || (data.detail)) resEl.classList.add('err');
+    else resEl.classList.add('ok');
+  } catch (e) {
+    resEl.textContent = 'Error: ' + e.message + '\n\n(Start the backend: uvicorn backend.main:app --reload --port 8000)';
+    resEl.classList.add('err');
+  } finally {
+    resEl.classList.add('show');
+    if (btn) { btn.classList.remove('loading'); btn.disabled = false; }
+  }
+}
+</script>
+</body>
+</html>

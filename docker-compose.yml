@@ -1,0 +1,23 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    volumes:
+      - ./backend:/app/backend
+    command: uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+
+  temporal:
+    image: temporalio/server:latest
+    ports:
+      - "7233:7233"
+    command: start-dev
+
+  # Uncomment to run a local vector DB for MongoDB Atlas-style memory:
+  # mongo:
+  #   image: mongo:latest
+  #   ports:
+  #     - "27017:27017"

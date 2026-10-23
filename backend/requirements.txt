@@ -1,0 +1,17 @@
+fastapi==0.115.0
+uvicorn==0.32.1
+pydantic==2.9.2
+python-dotenv==1.0.1
+pandas==2.2.3
+numpy==1.26.4
+scikit-learn==1.5.0
+sentry-sdk==2.3.0
+temporalio==1.10.0
+httpx==0.27.0
+python-multipart==0.0.9
+# Optional open-weight AI (installed if you want local inference):
+# transformers==4.46.3   # Gemma via Hugging Face
+# sentence-transformers==3.0.1  # embeddings for memory/RAG
+# torch==2.5.1           # backend for transformers / TabPFN
+# tabpfn==0.3.3          # Prior Labs tabular foundation model
+# ollama==0.3.3          # Gemma via Ollama (recommended local runtime)

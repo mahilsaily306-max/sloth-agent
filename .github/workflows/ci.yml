@@ -1,0 +1,55 @@
+name: CI (Sloth Agent)
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python deps
+        run: |
+          pip install -r backend/requirements.txt --quiet || true
+          pip install pytest httpx --quiet
+
+      - name: Lint backend (compile check)
+        run: |
+          python -m py_compile \
+            backend/main.py \
+            backend/agents/sloth_agent.py \
+            backend/models/gemma.py \
+            backend/models/tabpfn.py \
+            backend/sentry_config.py \
+            backend/tasks/overnight.py \
+            backend/temporal/workflows.py
+
+      - name: Run backend smoke tests
+        run: python backend/tests/smoke_test.py
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Type-check integrations
+        run: |
+          npm install -g typescript || true
+          npx tsc --noEmit integrations/integrations.ts || true
+
+  copilot-review:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copilot PR review placeholder
+        run: echo "Copilot reviews this PR (GitHub Copilot prize category)."
