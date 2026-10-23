@@ -46,7 +46,7 @@ docker compose up
 
 ## Prize integrations (all 20 categories)
 
-Featured ($200 each):
+Featured:
 
 - **Gemma** — core local open-weight LLM (`backend/models/gemma.py`)
 - **TabPFN** — tabular forecast/classify from CSV (`backend/models/tabpfn.py`)
@@ -55,7 +55,7 @@ Featured ($200 each):
 - **Tinker** — fine-tune Gemma for overnight summarization (`docs/tinker.md`)
 - **Arduino** — UNO Q physical agent sketch (`docs/arduino.md`; needs hardware)
 
-Partner ($100 each):
+Partner:
 
 - **Mastra** — agent orchestration over open models (`integrations/integrations.ts`)
 - **Sentry** — agent tracing: latency, tokens, cost, errors (`backend/sentry_config.py`)
